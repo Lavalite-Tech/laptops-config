@@ -1,0 +1,11 @@
+---
+# Entry point for ansible-pull. Runs against the machine it's executing on.
+- name: Configure this laptop
+  hosts: localhost
+  connection: local
+  become: true
+  gather_facts: true
+
+  roles:
+    - users
+    # - sshd_hardening   # enable once you've confirmed keys work (see README)

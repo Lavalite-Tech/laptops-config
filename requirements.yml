@@ -1,0 +1,4 @@
+---
+# Installed by bootstrap/install.sh (and by ansible-pull via --requirements-file)
+collections:
+  - name: ansible.posix

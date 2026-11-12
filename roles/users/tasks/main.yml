@@ -1,0 +1,48 @@
+---
+- name: Ensure supplementary groups exist
+  ansible.builtin.group:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ managed_users | map(attribute='groups', default=[]) | flatten | unique }}"
+
+- name: Ensure managed users exist
+  ansible.builtin.user:
+    name: "{{ item.name }}"
+    comment: "{{ item.comment | default(omit) }}"
+    shell: "{{ item.shell | default('/bin/bash') }}"
+    groups: "{{ item.groups | default([]) }}"
+    append: true               # add to these groups, don't strip other memberships
+    create_home: true
+    state: present
+  loop: "{{ managed_users }}"
+  loop_control:
+    label: "{{ item.name }}"
+
+- name: Install SSH authorized_keys
+  ansible.posix.authorized_key:
+    user: "{{ item.name }}"
+    key: "{{ item.ssh_keys | join('\n') }}"
+    exclusive: "{{ exclusive_keys }}"
+    manage_dir: true
+    state: present
+  loop: "{{ managed_users }}"
+  loop_control:
+    label: "{{ item.name }}"
+  when: item.ssh_keys | default([]) | length > 0
+
+- name: Remove offboarded users
+  ansible.builtin.user:
+    name: "{{ item }}"
+    state: absent
+    remove: true
+  loop: "{{ removed_users | default([]) }}"
+
+- name: Optional passwordless sudo for a group
+  ansible.builtin.copy:
+    dest: /etc/sudoers.d/90-ansible-managed
+    content: "%{{ passwordless_sudo_group }} ALL=(ALL) NOPASSWD:ALL\n"
+    owner: root
+    group: root
+    mode: "0440"
+    validate: /usr/sbin/visudo -cf %s
+  when: passwordless_sudo_group | length > 0

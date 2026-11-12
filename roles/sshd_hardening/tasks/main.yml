@@ -1,0 +1,16 @@
+---
+# Only enable this AFTER confirming key login works for at least one admin,
+# or you can lock yourself out of SSH.
+- name: Harden sshd (drop-in config)
+  ansible.builtin.copy:
+    dest: /etc/ssh/sshd_config.d/10-ansible-hardening.conf
+    content: |
+      # Managed by Ansible - do not edit
+      PasswordAuthentication no
+      PermitRootLogin no
+      PubkeyAuthentication yes
+    owner: root
+    group: root
+    mode: "0644"
+    validate: /usr/sbin/sshd -t -f %s
+  notify: Reload sshd

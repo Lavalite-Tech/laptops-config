@@ -1,0 +1,29 @@
+---
+# ===== Single source of truth for user accounts =====
+# Edit this file, commit, push. Laptops converge on their next pull.
+
+managed_users:
+  - name: alice
+    comment: "Alice Example"
+    shell: /bin/bash
+    groups: [sudo]            # use "wheel" on RHEL/Fedora family
+    ssh_keys:
+      - "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIExampleAliceKeyReplaceMe alice@laptop"
+
+  - name: bob
+    comment: "Bob Example"
+    shell: /bin/bash
+    groups: []
+    ssh_keys:
+      - "{{ lookup('file', 'pubkeys/bob.pub') }}"   # or keep keys as files in files/pubkeys/
+
+# Accounts to REMOVE (and whose home dirs get deleted). Move a name here to offboard.
+removed_users:
+  - mallory
+
+# If true, authorized_keys is rewritten to contain ONLY the keys above
+# (keys added by hand on the laptop are removed). Recommended for a managed fleet.
+exclusive_keys: true
+
+# Give members of this group passwordless sudo? Set to "" to disable.
+passwordless_sudo_group: ""

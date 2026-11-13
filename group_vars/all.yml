@@ -3,23 +3,23 @@
 # Edit this file, commit, push. Laptops converge on their next pull.
 
 managed_users:
-  - name: alice
-    comment: "Alice Example"
+  - name: Thapelo
+    comment: "Thapelo MacBook"
     shell: /bin/bash
     groups: [sudo]            # use "wheel" on RHEL/Fedora family
     ssh_keys:
-      - "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIExampleAliceKeyReplaceMe alice@laptop"
+      - "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDBNveMod7lv/tvkEQAlOK4Rqui8sA7r5SfBIpEUFZkC tech1-macbook"
 
-  - name: bob
-    comment: "Bob Example"
+  - name: tebogo
+    comment: "Tebogo Example"
     shell: /bin/bash
     groups: []
     ssh_keys:
-      - "{{ lookup('file', 'pubkeys/bob.pub') }}"   # or keep keys as files in files/pubkeys/
+      - "{{ lookup('file', 'pubkeys/tebogo.pub') }}"   # or keep keys as files in files/pubkeys/
 
 # Accounts to REMOVE (and whose home dirs get deleted). Move a name here to offboard.
 removed_users:
-  - mallory
+  - dabwitso
 
 # If true, authorized_keys is rewritten to contain ONLY the keys above
 # (keys added by hand on the laptop are removed). Recommended for a managed fleet.
